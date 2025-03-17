@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import WeeklyActivityChart from '../components/charts/WeeklyActivityChart';
+import ExpenseStatisticsChart from '../components/charts/ExpenseStatisticsChart';
+import BalanceHistoryChart from '../components/charts/BalanceHistoryChart';
+import QuickTransfer from '../components/transfers/QuickTransfer';
+import CardSection from '../components/cards/CardSection';
 
 const PageContainer = styled.div`
   margin-top: 10px;
@@ -16,7 +21,7 @@ const DashboardPage = () => {
   const [hover, setHover] = useState(false);
   return (
     <PageContainer>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
         <div className="mb-6">
           <div className="flex justify-between items-center">
             <SectionTitle>My Cards</SectionTitle>
@@ -28,9 +33,8 @@ const DashboardPage = () => {
               See All
             </a>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            {/* Card components will go here */}
-            <div className="text-center p-12">Card components placeholder</div>
+          <div>
+            <CardSection />
           </div>
         </div>
         <div>
@@ -38,7 +42,7 @@ const DashboardPage = () => {
           <div className="bg-white p-4 rounded-lg">
             {/* Weekly activity chart will go here */}
             <div className="text-center p-12">
-              Weekly activity chart placeholder
+              Recent Transactions placeholder
             </div>
           </div>
         </div>
@@ -47,42 +51,22 @@ const DashboardPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <SectionTitle>Weekly Activity</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Weekly activity chart will go here */}
-            <div className="text-center p-12">
-              Weekly activity chart placeholder
-            </div>
-          </div>
+          <WeeklyActivityChart />
         </div>
         <div>
           <SectionTitle>Expense Statistics</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Expense pie chart will go here */}
-            <div className="text-center p-12">
-              Expense statistics chart placeholder
-            </div>
-          </div>
+          <ExpenseStatisticsChart />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <SectionTitle>Quick Transfer</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Quick transfer component will go here */}
-            <div className="text-center p-12">
-              Quick transfer component placeholder
-            </div>
-          </div>
+          <QuickTransfer />
         </div>
         <div>
           <SectionTitle>Balance History</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Balance history chart will go here */}
-            <div className="text-center p-12">
-              Balance history chart placeholder
-            </div>
-          </div>
+          <BalanceHistoryChart />
         </div>
       </div>
     </PageContainer>
