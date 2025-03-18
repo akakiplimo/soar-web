@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import cardIcon from '../../assets/icon_money.svg';
+import paypalIcon from '../../assets/icon_paypal.svg';
+import dollarIcon from '../../assets/icon_dollar.svg';
 
 const TransactionsContainer = styled.div`
   background-color: ${(props) => (props.dark ? '#343a40' : 'white')};
@@ -30,7 +33,7 @@ const TransactionIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${($bgColor) => $bgColor || '#f0f0f0'};
+  background-color: ${({ $bgColor }) => $bgColor || '#f0f0f0'};
 `;
 
 const TransactionInfo = styled.div`
@@ -41,8 +44,8 @@ const TransactionInfo = styled.div`
 const transactions = [
   {
     type: 'card',
-    icon: '💳',
-    iconBg: '#FFF2E2',
+    icon: cardIcon,
+    iconBg: '#fff5d9',
     text: 'Deposit from my Card',
     date: '28 January 2021',
     amount: '-$850',
@@ -50,8 +53,8 @@ const transactions = [
   },
   {
     type: 'paypal',
-    icon: '🅿️',
-    iconBg: '#E8F0FF',
+    icon: paypalIcon,
+    iconBg: '#e7edff',
     text: 'Deposit Paypal',
     date: '25 January 2021',
     amount: '+$2,500',
@@ -59,8 +62,8 @@ const transactions = [
   },
   {
     type: 'user',
-    icon: '👤',
-    iconBg: '#E6FFFA',
+    icon: dollarIcon,
+    iconBg: '#dcfaf8',
     text: 'Jemi Wilson',
     date: '21 January 2021',
     amount: '+$5,400',
@@ -75,7 +78,7 @@ const RecentTransactions = ({ isMobile }) => {
         <TransactionItem key={index}>
           <div className="flex items-center">
             <TransactionIcon $bgColor={transaction.iconBg}>
-              {transaction.icon}
+              <img src={transaction.icon} alt={transaction.type} />
             </TransactionIcon>
             <TransactionInfo>
               <div className="font-medium">{transaction.text}</div>

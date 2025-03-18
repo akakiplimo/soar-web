@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { FaSearch, FaBell, FaCog, FaBars } from 'react-icons/fa';
 import userImg from '../assets/user.png';
 import { useLocation } from 'react-router-dom';
+import { COLORS } from '../utils/colors';
 
 const TopBarContainer = styled.header`
   display: flex;
@@ -10,7 +11,7 @@ const TopBarContainer = styled.header`
   align-items: center;
   padding: 15px;
   background-color: white;
-  /* border-bottom: 1px solid #e0e0e0; */
+  /* border-bottom: 1px solid #f46464; */
 `;
 
 const MainSection = styled.div`
@@ -24,7 +25,7 @@ const PageTitle = styled.h1`
   font-size: ${({ $isMobile }) => ($isMobile ? '20px' : '24px')};
   display: ${({ $isMobile }) => ($isMobile ? 'flex' : 'block')};
   font-weight: 600;
-  color: #333;
+  color: ${COLORS.titlePrimary ? COLORS.titlePrimary : '#333'};
   padding-left: ${({ $isMobile }) => ($isMobile ? '0' : '10px')};
 `;
 

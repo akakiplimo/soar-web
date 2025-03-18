@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { FaCcMastercard, FaCcVisa } from 'react-icons/fa';
+import chipIconDark from '../../assets/icon_chip_dark.svg';
+import chipIconLight from '../../assets/icon_chip_light.svg';
 
 const CardContainer = styled.div`
   width: 100%;
@@ -49,6 +51,18 @@ const CardFooter = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  align-content: center;
+  background: ${({ type }) => (type === 'dark' ? '#666' : '')};
+  margin: 0 -20px -20px -20px;
+  padding: 0 20px 10px;
+  width: calc(100% + 40px);
+`;
+
+const CardMiddleInfo = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  padding: 10px 0;
 `;
 
 const CardholderInfo = styled.div`
@@ -76,12 +90,43 @@ const ValidInfo = styled.div`
 const CardNumber = styled.div`
   font-size: 18px;
   letter-spacing: 2px;
-  margin: 20px 0;
+  margin: 20px 0 0 0;
 `;
 
 const CardNetwork = styled.div`
   font-size: 28px;
 `;
+
+const AltChipSvg = ({ type }) => (
+  <svg
+    width="40"
+    height="30"
+    viewBox="0 0 40 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect
+      width="40"
+      height="30"
+      rx="4"
+      fill={type === 'dark' ? '#666' : '#ddd'}
+    />
+    <rect
+      x="8"
+      y="8"
+      width="24"
+      height="4"
+      fill={type === 'dark' ? '#999' : '#aaa'}
+    />
+    <rect
+      x="8"
+      y="16"
+      width="24"
+      height="6"
+      fill={type === 'dark' ? '#999' : '#aaa'}
+    />
+  </svg>
+);
 
 const CreditCard = ({
   type = 'dark',
@@ -100,40 +145,14 @@ const CreditCard = ({
           <BalanceAmount>{balance}</BalanceAmount>
         </BalanceInfo>
         <ChipIcon>
-          <svg
-            width="40"
-            height="30"
-            viewBox="0 0 40 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              width="40"
-              height="30"
-              rx="4"
-              fill={type === 'dark' ? '#666' : '#ddd'}
-            />
-            <rect
-              x="8"
-              y="8"
-              width="24"
-              height="4"
-              fill={type === 'dark' ? '#999' : '#aaa'}
-            />
-            <rect
-              x="8"
-              y="16"
-              width="24"
-              height="6"
-              fill={type === 'dark' ? '#999' : '#aaa'}
-            />
-          </svg>
+          <img
+            src={type === 'dark' ? chipIconLight : chipIconDark}
+            alt={<AltChipSvg type={type} />}
+          />
         </ChipIcon>
       </CardHeader>
 
-      <CardNumber>{cardNumber}</CardNumber>
-
-      <CardFooter>
+      <CardMiddleInfo>
         <CardholderInfo>
           <CardLabel>CARD HOLDER</CardLabel>
           <CardholderName>{cardHolder}</CardholderName>
@@ -143,7 +162,10 @@ const CreditCard = ({
           <CardLabel>VALID THRU</CardLabel>
           <CardholderName>{validThru}</CardholderName>
         </ValidInfo>
+      </CardMiddleInfo>
 
+      <CardFooter type={type}>
+        <CardNumber>{cardNumber}</CardNumber>
         <CardNetwork>
           {network === 'mastercard' ? <FaCcMastercard /> : <FaCcVisa />}
         </CardNetwork>

@@ -7,6 +7,7 @@ import QuickTransfer from '../components/transfers/QuickTransfer';
 import CardSection from '../components/cards/CardSection';
 import { useEffect } from 'react';
 import RecentTransactions from '../components/transactions/RecentTransactions';
+import { COLORS } from '../utils/colors';
 
 const PageContainer = styled.div`
   margin-top: 10px;
@@ -16,7 +17,7 @@ const SectionTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #333;
+  color: ${COLORS.titlePrimary ? COLORS.titlePrimary : '#333'};
 `;
 
 const DashboardPage = () => {
@@ -39,7 +40,10 @@ const DashboardPage = () => {
           <div className="flex justify-between items-center">
             <SectionTitle>My Cards</SectionTitle>
             <a
-              style={{ color: hover ? '#000' : '#6c6c6c', cursor: 'pointer' }}
+              style={{
+                color: hover ? '#6c6c6c' : COLORS.titlePrimary,
+                cursor: 'pointer',
+              }}
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
             >
