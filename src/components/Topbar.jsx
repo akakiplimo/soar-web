@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FaSearch, FaBell, FaCog, FaBars } from 'react-icons/fa';
 import userImg from '../assets/user.png';
+import { useLocation } from 'react-router-dom';
 
 const TopBarContainer = styled.header`
   display: flex;
@@ -33,12 +34,12 @@ const SearchBar = styled.div`
   margin: ${({ $isMobile }) => ($isMobile ? '15px 0 0' : '0 20px')};
 
   /* For mobile, show below other elements */
-  @media (max-width: 768px) {
+  @media (max-width: 820px) {
     order: 2; /* Ensures it appears below in mobile view */
   }
 
   /* For desktop, show in normal layout */
-  @media (min-width: 769px) {
+  @media (min-width: 821px) {
     order: 0;
     display: block;
   }
@@ -105,7 +106,7 @@ const IconButton = styled.div`
 
   display: ${({ $isMobile }) => ($isMobile ? 'none' : 'flex')};
 
-  @media (min-width: 768px) {
+  @media (min-width: 820px) {
     display: flex;
   }
 `;
@@ -137,6 +138,13 @@ const MenuButton = styled.button`
 `;
 
 const TopBar = ({ isMobile, onMenuClick }) => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  // remove preceding '/' and capitalize the first letter
+  const pageTitle =
+    pathname.replace('/', '').charAt(0).toUpperCase() + pathname.slice(2);
+
   return (
     <TopBarContainer $isMobile={isMobile}>
       <MainSection>
@@ -146,7 +154,9 @@ const TopBar = ({ isMobile, onMenuClick }) => {
               <FaBars />
             </MenuButton>
           )}
-          <PageTitle $isMobile={isMobile}>Overview</PageTitle>
+          <PageTitle $isMobile={isMobile}>
+            {pageTitle === '' ? 'Overview' : pageTitle}
+          </PageTitle>
         </LeftSection>
 
         <RightSection>

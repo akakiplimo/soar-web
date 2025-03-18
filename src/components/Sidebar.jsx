@@ -14,12 +14,12 @@ import {
 import logo from '../assets/logo.svg';
 
 const SidebarContainer = styled.div`
-  width: ${(props) => (props.isMobile ? '100%' : '210px')};
-  height: ${(props) => (props.isMobile ? '100%' : '100vh')};
+  width: ${({ $isMobile }) => ($isMobile ? '100%' : '210px')};
+  height: ${({ $isMobile }) => ($isMobile ? '100%' : '100vh')};
   background-color: white;
   border-right: 1px solid #e0e0e0;
-  position: ${(props) => (props.isMobile ? 'fixed' : 'relative')};
-  z-index: ${(props) => (props.isMobile ? '1000' : '1')};
+  position: ${({ $isMobile }) => ($isMobile ? 'fixed' : 'relative')};
+  z-index: ${({ $isMobile }) => ($isMobile ? '1000' : '1')};
   overflow-y: auto;
   transition: all 0.3s ease;
 `;
@@ -28,8 +28,8 @@ const Logo = styled.div`
   padding: 20px;
   display: flex;
   align-items: center;
-  justify-content: ${(props) =>
-    props.isMobile ? 'space-between' : 'flex-start'};
+  justify-content: ${({ $isMobile }) =>
+    $isMobile ? 'space-between' : 'flex-start'};
   /* border-bottom: 1px solid #f0f0f0; */
 `;
 
@@ -73,7 +73,7 @@ const IconWrapper = styled.span`
 `;
 
 const CloseButton = styled.button`
-  display: ${(props) => (props.isMobile ? 'flex' : 'none')};
+  display: ${({ $isMobile }) => ($isMobile ? 'flex' : 'none')};
   background: none;
   border: none;
   font-size: 20px;
@@ -96,15 +96,15 @@ const Sidebar = (props) => {
   ];
 
   return (
-    <SidebarContainer isMobile={isMobile}>
-      <Logo isMobile={isMobile}>
+    <SidebarContainer $isMobile={isMobile}>
+      <Logo $isMobile={isMobile}>
         <img
           src={logo}
           alt="Soar Task"
           className="w-full h-full object-cover"
           style={{ width: isMobile ? '10rem' : '' }}
         />
-        <CloseButton isMobile={isMobile} onClick={onClose}>
+        <CloseButton $isMobile={isMobile} onClick={onClose}>
           &times;
         </CloseButton>
       </Logo>
