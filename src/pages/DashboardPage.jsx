@@ -5,6 +5,8 @@ import ExpenseStatisticsChart from '../components/charts/ExpenseStatisticsChart'
 import BalanceHistoryChart from '../components/charts/BalanceHistoryChart';
 import QuickTransfer from '../components/transfers/QuickTransfer';
 import CardSection from '../components/cards/CardSection';
+import { useEffect } from 'react';
+import RecentTransactions from '../components/transactions/RecentTransactions';
 
 const PageContainer = styled.div`
   margin-top: 10px;
@@ -19,6 +21,17 @@ const SectionTitle = styled.h2`
 
 const DashboardPage = () => {
   const [hover, setHover] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <PageContainer>
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
@@ -34,37 +47,32 @@ const DashboardPage = () => {
             </a>
           </div>
           <div>
-            <CardSection />
+            <CardSection isMobile={isMobile} />
           </div>
         </div>
-        <div>
+        <div className="mb-6">
           <SectionTitle>Recent Transaction</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Weekly activity chart will go here */}
-            <div className="text-center p-12">
-              Recent Transactions placeholder
-            </div>
-          </div>
+          <RecentTransactions isMobile={isMobile} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
+        <div className="mb-6">
           <SectionTitle>Weekly Activity</SectionTitle>
           <WeeklyActivityChart />
         </div>
-        <div>
+        <div className="mb-6">
           <SectionTitle>Expense Statistics</SectionTitle>
           <ExpenseStatisticsChart />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
+        <div className="mb-6">
           <SectionTitle>Quick Transfer</SectionTitle>
           <QuickTransfer />
         </div>
-        <div>
+        <div className="mb-6">
           <SectionTitle>Balance History</SectionTitle>
           <BalanceHistoryChart />
         </div>

@@ -3,10 +3,23 @@ import CreditCard from './CreditCard';
 
 const CardsSectionContainer = styled.div`
   display: flex;
-  gap: 16px;
+  overflow-x: ${(props) => (props.isMobile ? 'auto' : 'visible')};
+  scroll-snap-type: x mandatory;
+  gap: ${({ $isMobile }) => ($isMobile ? '15px' : '20px')};
+  padding-bottom: ${({ $isMobile }) => ($isMobile ? '10px' : '0')};
+  margin-bottom: ${({ $isMobile }) => ($isMobile ? '10px' : '20px')};
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+  }
 `;
 
-const CardSection = () => {
+const CardSection = ({ isMobile }) => {
   // Sample cards data
   const cards = [
     {
@@ -30,7 +43,7 @@ const CardSection = () => {
   ];
 
   return (
-    <CardsSectionContainer>
+    <CardsSectionContainer $isMobile={isMobile}>
       {cards.map((card) => (
         <CreditCard
           key={card.id}
@@ -40,6 +53,7 @@ const CardSection = () => {
           cardNumber={card.cardNumber}
           validThru={card.validThru}
           network={card.network}
+          isMobile={isMobile}
         />
       ))}
     </CardsSectionContainer>

@@ -14,16 +14,22 @@ import {
 import logo from '../assets/logo.svg';
 
 const SidebarContainer = styled.div`
-  width: 210px;
+  width: ${(props) => (props.isMobile ? '100%' : '210px')};
+  height: ${(props) => (props.isMobile ? '100%' : '100vh')};
   background-color: white;
-  height: 100vh;
   border-right: 1px solid #e0e0e0;
+  position: ${(props) => (props.isMobile ? 'fixed' : 'relative')};
+  z-index: ${(props) => (props.isMobile ? '1000' : '1')};
+  overflow-y: auto;
+  transition: all 0.3s ease;
 `;
 
 const Logo = styled.div`
   padding: 20px;
   display: flex;
   align-items: center;
+  justify-content: ${(props) =>
+    props.isMobile ? 'space-between' : 'flex-start'};
   /* border-bottom: 1px solid #f0f0f0; */
 `;
 
@@ -66,7 +72,17 @@ const IconWrapper = styled.span`
   align-items: center;
 `;
 
-const Sidebar = () => {
+const CloseButton = styled.button`
+  display: ${(props) => (props.isMobile ? 'flex' : 'none')};
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #777;
+`;
+
+const Sidebar = (props) => {
+  const { isMobile, onClose } = props;
   const menuItems = [
     { path: '/', name: 'Dashboard', icon: <FaHome /> },
     { path: '/transactions', name: 'Transactions', icon: <FaExchangeAlt /> },
@@ -80,13 +96,17 @@ const Sidebar = () => {
   ];
 
   return (
-    <SidebarContainer>
-      <Logo>
+    <SidebarContainer isMobile={isMobile}>
+      <Logo isMobile={isMobile}>
         <img
           src={logo}
           alt="Soar Task"
           className="w-full h-full object-cover"
+          style={{ width: isMobile ? '10rem' : '' }}
         />
+        <CloseButton isMobile={isMobile} onClick={onClose}>
+          &times;
+        </CloseButton>
       </Logo>
       <nav>
         {menuItems.map((item) => (
@@ -94,6 +114,7 @@ const Sidebar = () => {
             key={item.path}
             to={item.path}
             className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={isMobile ? onClose : undefined}
           >
             <IconWrapper>{item.icon}</IconWrapper>
             <span>{item.name}</span>

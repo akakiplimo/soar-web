@@ -3,7 +3,7 @@ import { FaCcMastercard, FaCcVisa } from 'react-icons/fa';
 
 const CardContainer = styled.div`
   width: 100%;
-  height: 200px;
+  height: 100%;
   border-radius: 14px;
   padding: 20px;
   position: relative;
@@ -15,6 +15,8 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: ${({ $isMobile }) => ($isMobile ? '70%' : 'auto')};
+  scroll-snap-align: start;
 `;
 
 const CardHeader = styled.div`
@@ -88,9 +90,10 @@ const CreditCard = ({
   cardNumber = '3778 **** **** 1234',
   validThru = '12/22',
   network = 'mastercard',
+  isMobile,
 }) => {
   return (
-    <CardContainer type={type}>
+    <CardContainer type={type} $isMobile={isMobile}>
       <CardHeader>
         <BalanceInfo>
           <BalanceLabel>Balance</BalanceLabel>
