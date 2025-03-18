@@ -3,7 +3,7 @@ import CreditCard from './CreditCard';
 
 const CardsSectionContainer = styled.div`
   display: flex;
-  overflow-x: ${(props) => (props.isMobile ? 'auto' : 'visible')};
+  overflow-x: ${({ $isMobile }) => ($isMobile ? 'auto' : 'visible')};
   scroll-snap-type: x mandatory;
   gap: ${({ $isMobile }) => ($isMobile ? '15px' : '20px')};
   padding-bottom: ${({ $isMobile }) => ($isMobile ? '10px' : '0')};
