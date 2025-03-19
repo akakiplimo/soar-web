@@ -3,7 +3,7 @@ import { handlers } from './handlers';
 const api = {
   //user endpoints
   fetchUserProfile: () => handlers.getUserProfile(),
-  updateProfile: (updatedData) => handlers.updateUserProfile(updatedData),
+  updateUserProfile: (updatedData) => handlers.updateUserProfile(updatedData),
 
   // transactions endpoints
   fetchTransactions: () => handlers.getTransactions(),
@@ -17,7 +17,7 @@ const api = {
   addCard: (newCard) => handlers.addCard(newCard),
 
   // expense endpoints
-  fetchExpenses: () => handlers.getExpenses(),
+  fetchExpenses: () => handlers.getExpenseStats(),
 
   // weekly activity endpoints
   fetchWeeklyActivity: () => handlers.getWeeklyActivity(),

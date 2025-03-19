@@ -1,5 +1,4 @@
 export const userData = {
-  id: 1,
   name: 'Charlene Reed',
   username: 'Charlene Reed',
   email: 'charlenereed@gmail.com',

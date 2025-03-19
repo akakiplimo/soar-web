@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
-import userImg from '../../assets/user.png';
-import { useEffect } from 'react';
-import api from '../../mocks/api';
+import userImg from '../../assets/userEmpty.png';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchUserProfile } from '../../store/slices/userSlice';
 
 const ProfilePictureContainer = styled.div`
   position: relative;
@@ -81,28 +81,46 @@ const SubmitButtonContainer = styled.div`
 `;
 
 const ProfileEditForm = () => {
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [userData, setUserData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    password: '',
+    dob: '',
+    presentAddress: '',
+    permanentAddress: '',
+    city: '',
+    postalCode: '',
+    country: '',
+    profilePicture: '',
+  });
+
+  const dispatch = useAppDispatch();
+  const userState = useAppSelector((state) => state.user);
+  const {
+    data: user,
+    status,
+    error,
+  } = userState ?? { data: null, status: 'idle', error: null };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await api.fetchUserProfile();
-        setUserData(data);
-        setIsLoading(false);
-      } catch (err) {
-        setError('Failed to fetch user data', err);
-        setIsLoading(false);
-      }
-    };
+    if (status === 'idle') {
+      dispatch(fetchUserProfile());
+    }
+  }, [dispatch, status]);
 
-    fetchData();
-  }, []);
+  //update form data when user data is loaded
+  useEffect(() => {
+    if (user) {
+      setUserData({
+        ...user,
+      });
+    }
+  }, [user]);
 
-  console.log(userData);
+  console.log(userData, status, error);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (status === 'loading') return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   const handleChange = (e) => {
@@ -142,7 +160,7 @@ const ProfileEditForm = () => {
         <ProfileSection>
           <ProfilePictureContainer>
             <img
-              src={userImg}
+              src={userData.profilePicture ?? userImg}
               alt="ProfileEditImg"
               className="w-full h-full object-cover rounded-full"
             />
