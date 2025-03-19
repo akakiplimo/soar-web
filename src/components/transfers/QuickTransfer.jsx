@@ -160,6 +160,7 @@ const QuickTransfer = () => {
   const handleSend = () => {
     console.log('Sending', amount, 'to contact ID:', selectedContact);
     // Here you would typically make an API call to process the transfer
+    window.alert(`Sending ${amount} to contact ID: ${selectedContact}`);
   };
 
   return (
