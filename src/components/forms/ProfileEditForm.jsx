@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import userImg from '../../assets/user.png';
+import { useEffect } from 'react';
+import api from '../../mocks/api';
 
 const ProfilePictureContainer = styled.div`
   position: relative;
@@ -79,28 +81,39 @@ const SubmitButtonContainer = styled.div`
 `;
 
 const ProfileEditForm = () => {
-  const [formData, setFormData] = useState({
-    name: 'Charlene Reed',
-    username: 'Charlene Reed',
-    email: 'charlenereed@gmail.com',
-    password: '**********',
-    dob: '25 January 1990',
-    presentAddress: 'San Jose, California, USA',
-    permanentAddress: 'San Jose, California, USA',
-    city: 'San Jose',
-    postalCode: '45962',
-    country: 'USA',
-  });
+  const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await api.fetchUserProfile();
+        setUserData(data);
+        setIsLoading(false);
+      } catch (err) {
+        setError('Failed to fetch user data', err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(userData);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
-    console.log('Form submitted:', formData);
+    console.log('Form submitted:', userData);
     // Add your API call here
   };
 
@@ -161,7 +174,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="name"
-                value={formData.name}
+                value={userData.name}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -171,7 +184,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="username"
-                value={formData.username}
+                value={userData.username}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -182,7 +195,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="email"
                 name="email"
-                value={formData.email}
+                value={userData.email}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -192,7 +205,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="password"
                 name="password"
-                value={formData.password}
+                value={userData.password}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -203,7 +216,7 @@ const ProfileEditForm = () => {
                 <FormInput
                   type="text"
                   name="dob"
-                  value={formData.dob}
+                  value={userData.dob}
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -227,7 +240,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="presentAddress"
-                value={formData.presentAddress}
+                value={userData.presentAddress}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -239,7 +252,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="permanentAddress"
-                value={formData.permanentAddress}
+                value={userData.permanentAddress}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -249,7 +262,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="city"
-                value={formData.city}
+                value={userData.city}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -259,7 +272,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="postalCode"
-                value={formData.postalCode}
+                value={userData.postalCode}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -269,7 +282,7 @@ const ProfileEditForm = () => {
               <FormInput
                 type="text"
                 name="country"
-                value={formData.country}
+                value={userData.country}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
