@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import cardIcon from '../../assets/icon_money.svg';
-import paypalIcon from '../../assets/icon_paypal.svg';
-import dollarIcon from '../../assets/icon_dollar.svg';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchTransactions } from '../../store/slices/transactionsSlice';
 
 const TransactionsContainer = styled.div`
   background-color: ${(props) => (props.dark ? '#343a40' : 'white')};
@@ -12,6 +11,26 @@ const TransactionsContainer = styled.div`
   min-width: ${($isMobile) => ($isMobile ? '85%' : 'auto')};
   scroll-snap-align: start;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  max-height: 200px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+
+    &:hover {
+      background: #bbb;
+    }
+  }
 `;
 
 const TransactionItem = styled.div`
@@ -41,40 +60,38 @@ const TransactionInfo = styled.div`
   margin-left: 10px;
 `;
 
-const transactions = [
-  {
-    type: 'card',
-    icon: cardIcon,
-    iconBg: '#fff5d9',
-    text: 'Deposit from my Card',
-    date: '28 January 2021',
-    amount: '-$850',
-    color: 'text-red-500',
-  },
-  {
-    type: 'paypal',
-    icon: paypalIcon,
-    iconBg: '#e7edff',
-    text: 'Deposit Paypal',
-    date: '25 January 2021',
-    amount: '+$2,500',
-    color: 'text-green-500',
-  },
-  {
-    type: 'user',
-    icon: dollarIcon,
-    iconBg: '#dcfaf8',
-    text: 'Jemi Wilson',
-    date: '21 January 2021',
-    amount: '+$5,400',
-    color: 'text-green-500',
-  },
-];
-
 const RecentTransactions = ({ isMobile }) => {
+  const [recentTransactions, setRecentTransactions] = useState([]);
+
+  const dispatch = useAppDispatch();
+  const transactionsState = useAppSelector((state) => state.transactions);
+  const {
+    data: transactions,
+    status,
+    error,
+  } = transactionsState ?? { data: null, status: 'idle', error: null };
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchTransactions());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (transactions) {
+      setRecentTransactions(transactions);
+    }
+  }, [transactions]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  if (!recentTransactions || recentTransactions.length === 0)
+    return <div>No transactions found</div>;
+
   return (
     <TransactionsContainer $isMobile={isMobile}>
-      {transactions.map((transaction, index) => (
+      {recentTransactions.map((transaction, index) => (
         <TransactionItem key={index}>
           <div className="flex items-center">
             <TransactionIcon $bgColor={transaction.iconBg}>

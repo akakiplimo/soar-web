@@ -6,8 +6,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Area,
 } from 'recharts';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useEffect, useState } from 'react';
+import { fetchBalances } from '../../store/slices/balanceHistorySlice';
 
 const ChartContainer = styled.div`
   width: 100%;
@@ -15,6 +19,7 @@ const ChartContainer = styled.div`
   background: white;
   border-radius: 8px;
   padding: 16px;
+  color: #333;
 `;
 
 const ChartHeader = styled.div`
@@ -44,22 +49,38 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const BalanceHistoryChart = () => {
-  // Sample data based on the image
-  const data = [
-    { name: 'Jul', value: 200 },
-    { name: 'Aug', value: 350 },
-    { name: 'Sep', value: 250 },
-    { name: 'Oct', value: 700 },
-    { name: 'Nov', value: 400 },
-    { name: 'Dec', value: 650 },
-    { name: 'Jan', value: 550 },
-  ];
+  const [chartData, setChartData] = useState([]);
+  const dispatch = useAppDispatch();
+  const balanceHistoryState = useAppSelector((state) => state.balances);
+  const {
+    data: balances,
+    status,
+    error,
+  } = balanceHistoryState ?? { data: null, status: 'idle', error: null };
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchBalances());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (balances) {
+      setChartData(balances);
+    }
+  }, [balances]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  if (!chartData || chartData.length === 0)
+    return <ChartContainer>No Balances found</ChartContainer>;
 
   return (
     <ChartContainer>
       <ResponsiveContainer width="100%" height="90%">
         <LineChart
-          data={data}
+          data={chartData}
           margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
         >
           <defs>
@@ -95,7 +116,7 @@ const BalanceHistoryChart = () => {
               strokeWidth: 2,
             }}
           />
-          <area
+          <Area
             type="monotone"
             dataKey="value"
             stroke="none"

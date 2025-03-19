@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import CreditCard from './CreditCard';
+import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useEffect } from 'react';
+import { fetchCards } from '../../store/slices/cardsSlice';
 
 const CardsSectionContainer = styled.div`
   display: flex;
@@ -20,31 +24,36 @@ const CardsSectionContainer = styled.div`
 `;
 
 const CardSection = ({ isMobile }) => {
-  // Sample cards data
-  const cards = [
-    {
-      id: 1,
-      type: 'dark',
-      balance: '$5,756',
-      cardHolder: 'Eddy Cusuma',
-      cardNumber: '3778 **** **** 1234',
-      validThru: '12/22',
-      network: 'mastercard',
-    },
-    {
-      id: 2,
-      type: 'light',
-      balance: '$5,756',
-      cardHolder: 'Eddy Cusuma',
-      cardNumber: '3778 **** **** 1234',
-      validThru: '12/22',
-      network: 'visa',
-    },
-  ];
+  const [cardsData, setCardsData] = useState([]);
+  const dispatch = useAppDispatch();
+  const cardsState = useAppSelector((state) => state.cards);
+  const {
+    data: cards,
+    status,
+    error,
+  } = cardsState ?? { data: null, status: 'idle', error: null };
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchCards());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (cards) {
+      setCardsData(cards);
+    }
+  }, [cards]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  if (!cardsData || cardsData.length === 0)
+    return <CardsSectionContainer>No Card Data found</CardsSectionContainer>;
 
   return (
     <CardsSectionContainer $isMobile={isMobile}>
-      {cards.map((card) => (
+      {cardsData.map((card) => (
         <CreditCard
           key={card.id}
           type={card.type}

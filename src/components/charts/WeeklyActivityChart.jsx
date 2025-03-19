@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchWeeklyActivity } from '../../store/slices/weeklyActivitySlice';
 
 const ChartContainer = styled.div`
   width: 100%;
@@ -17,6 +19,7 @@ const ChartContainer = styled.div`
   background: white;
   border-radius: 8px;
   padding: 16px;
+  color: #333;
 `;
 
 const ChartHeader = styled.div`
@@ -50,22 +53,38 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const WeeklyActivityChart = () => {
-  // Sample data based on the image
-  const [data, setData] = useState([
-    { name: 'Sat', deposit: 230, withdraw: 450 },
-    { name: 'Sun', deposit: 110, withdraw: 350 },
-    { name: 'Mon', deposit: 250, withdraw: 300 },
-    { name: 'Tue', deposit: 360, withdraw: 450 },
-    { name: 'Wed', deposit: 240, withdraw: 150 },
-    { name: 'Thu', deposit: 220, withdraw: 380 },
-    { name: 'Fri', deposit: 320, withdraw: 390 },
-  ]);
+  const [chartData, setChartData] = useState([]);
+  const dispatch = useAppDispatch();
+  const activityState = useAppSelector((state) => state.weeklyActivity);
+  const {
+    data: weeklyActivity,
+    status,
+    error,
+  } = activityState ?? { data: null, status: 'idle', error: null };
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchWeeklyActivity());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (weeklyActivity) {
+      setChartData(weeklyActivity);
+    }
+  }, [weeklyActivity]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  if (!chartData || chartData.length === 0)
+    return <ChartContainer>No Weekly Activity Data found</ChartContainer>;
 
   return (
     <ChartContainer>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={data}
+          data={chartData}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           barGap={8}
         >

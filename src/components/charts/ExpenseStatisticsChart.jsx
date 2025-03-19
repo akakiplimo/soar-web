@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   PieChart,
   Pie,
@@ -7,6 +8,9 @@ import {
   Tooltip,
 } from 'recharts';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useEffect } from 'react';
+import { fetchExpenses } from '../../store/slices/expenseStatsSlice';
 
 const ChartContainer = styled.div`
   width: 100%;
@@ -66,20 +70,39 @@ const CustomLegend = ({ payload }) => {
 };
 
 const ExpenseStatisticsChart = () => {
-  // Sample data based on the image
-  const data = [
-    { name: 'Entertainment', value: 30, color: '#34456C' },
-    { name: 'Bill Expense', value: 15, color: '#FF7F50' },
-    { name: 'Investment', value: 20, color: '#4169E1' },
-    { name: 'Others', value: 35, color: '#2F2F2F' },
-  ];
+  const [chartData, setChartData] = useState([]);
+  const dispatch = useAppDispatch();
+  const expenseStatsState = useAppSelector((state) => state.expenseStats);
+  const {
+    data: expenseStats,
+    status,
+    error,
+  } = expenseStatsState ?? { data: null, status: 'idle', error: null };
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchExpenses());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (expenseStats) {
+      setChartData(expenseStats);
+    }
+  }, [expenseStats]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  if (!chartData || chartData.length === 0)
+    return <ChartContainer>No Weekly Activity Data found</ChartContainer>;
 
   return (
     <ChartContainer>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={chartData}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -90,7 +113,7 @@ const ExpenseStatisticsChart = () => {
             startAngle={90}
             endAngle={-270}
           >
-            {data.map((entry, index) => (
+            {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
