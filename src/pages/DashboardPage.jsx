@@ -1,5 +1,13 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import WeeklyActivityChart from '../components/charts/WeeklyActivityChart';
+import ExpenseStatisticsChart from '../components/charts/ExpenseStatisticsChart';
+import BalanceHistoryChart from '../components/charts/BalanceHistoryChart';
+import QuickTransfer from '../components/transfers/QuickTransfer';
+import CardSection from '../components/cards/CardSection';
+import { useEffect } from 'react';
+import RecentTransactions from '../components/transactions/RecentTransactions';
+import { COLORS } from '../utils/colors';
 
 const PageContainer = styled.div`
   margin-top: 10px;
@@ -9,80 +17,68 @@ const SectionTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #333;
+  color: ${COLORS.titlePrimary ? COLORS.titlePrimary : '#333'};
 `;
 
 const DashboardPage = () => {
   const [hover, setHover] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <PageContainer>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
         <div className="mb-6">
           <div className="flex justify-between items-center">
             <SectionTitle>My Cards</SectionTitle>
             <a
-              style={{ color: hover ? '#000' : '#6c6c6c', cursor: 'pointer' }}
+              style={{
+                color: hover ? '#6c6c6c' : COLORS.titlePrimary,
+                cursor: 'pointer',
+              }}
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
             >
               See All
             </a>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            {/* Card components will go here */}
-            <div className="text-center p-12">Card components placeholder</div>
+          <div>
+            <CardSection isMobile={isMobile} />
           </div>
         </div>
-        <div>
+        <div className="mb-6">
           <SectionTitle>Recent Transaction</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Weekly activity chart will go here */}
-            <div className="text-center p-12">
-              Weekly activity chart placeholder
-            </div>
-          </div>
+          <RecentTransactions isMobile={isMobile} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
+        <div className="mb-6">
           <SectionTitle>Weekly Activity</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Weekly activity chart will go here */}
-            <div className="text-center p-12">
-              Weekly activity chart placeholder
-            </div>
-          </div>
+          <WeeklyActivityChart />
         </div>
-        <div>
+        <div className="mb-6">
           <SectionTitle>Expense Statistics</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Expense pie chart will go here */}
-            <div className="text-center p-12">
-              Expense statistics chart placeholder
-            </div>
-          </div>
+          <ExpenseStatisticsChart />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
+        <div className="mb-6">
           <SectionTitle>Quick Transfer</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Quick transfer component will go here */}
-            <div className="text-center p-12">
-              Quick transfer component placeholder
-            </div>
-          </div>
+          <QuickTransfer />
         </div>
-        <div>
+        <div className="mb-6">
           <SectionTitle>Balance History</SectionTitle>
-          <div className="bg-white p-4 rounded-lg">
-            {/* Balance history chart will go here */}
-            <div className="text-center p-12">
-              Balance history chart placeholder
-            </div>
-          </div>
+          <BalanceHistoryChart />
         </div>
       </div>
     </PageContainer>
