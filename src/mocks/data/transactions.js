@@ -1,7 +1,7 @@
 export const transactions = [
   {
     type: 'card',
-    icon: '/src/assets/icon_money.svg',
+    icon: '/assets/icon_money.svg',
     iconBg: '#fff5d9',
     text: 'Deposit from my Card',
     date: '28 January 2021',
@@ -10,7 +10,7 @@ export const transactions = [
   },
   {
     type: 'paypal',
-    icon: '/src/assets/icon_paypal.svg',
+    icon: '/assets/icon_paypal.svg',
     iconBg: '#e7edff',
     text: 'Deposit Paypal',
     date: '25 January 2021',
@@ -19,7 +19,7 @@ export const transactions = [
   },
   {
     type: 'user',
-    icon: '/src/assets/icon_dollar.svg',
+    icon: '/assets/icon_dollar.svg',
     iconBg: '#dcfaf8',
     text: 'Jemi Wilson',
     date: '21 January 2021',
@@ -28,7 +28,7 @@ export const transactions = [
   },
   {
     type: 'card',
-    icon: '/src/assets/icon_money.svg',
+    icon: '/assets/icon_money.svg',
     iconBg: '#fff5d9',
     text: 'Deposit from my Card',
     date: '28 January 2021',
@@ -37,7 +37,7 @@ export const transactions = [
   },
   {
     type: 'paypal',
-    icon: '/src/assets/icon_paypal.svg',
+    icon: '/assets/icon_paypal.svg',
     iconBg: '#e7edff',
     text: 'Deposit Paypal',
     date: '25 January 2021',
@@ -46,7 +46,7 @@ export const transactions = [
   },
   {
     type: 'user',
-    icon: '/src/assets/icon_dollar.svg',
+    icon: '/assets/icon_dollar.svg',
     iconBg: '#dcfaf8',
     text: 'Jemi Wilson',
     date: '21 January 2021',
