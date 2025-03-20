@@ -10,6 +10,7 @@ const LayoutContainer = styled.div`
   width: 100%;
   height: 100vh;
   flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
+  position: relative;
 `;
 
 const MainContent = styled.main`
@@ -35,6 +36,20 @@ const MobileNavToggle = styled.button`
   border: none;
 `;
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+`;
+
 const DashboardLayout = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showMobileNav, setShowMobileNav] = useState(false);
@@ -51,11 +66,22 @@ const DashboardLayout = () => {
     return () => window.removeEventListener('resize', handleResize);
   });
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowMobileNav(false);
+    }
+  };
+
   return (
     <LayoutContainer $isMobile={isMobile}>
-      {(!isMobile || showMobileNav) && (
-        <Sidebar isMobile={isMobile} onClose={() => setShowMobileNav(false)} />
+      {isMobile && (
+        <Overlay $isOpen={showMobileNav} onClick={handleOverlayClick} />
       )}
+      <Sidebar
+        isMobile={isMobile}
+        isOpen={isMobile ? showMobileNav : true}
+        onClose={() => setShowMobileNav(false)}
+      />
       <MainContent>
         <TopBar
           isMobile={isMobile}

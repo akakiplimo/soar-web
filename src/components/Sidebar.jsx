@@ -10,26 +10,33 @@ import {
   FaCogs,
   FaTools,
   FaCrown,
+  FaTimes,
 } from 'react-icons/fa';
 import logo from '../assets/logo.svg';
+import { createPortal } from 'react-dom';
 
 const SidebarContainer = styled.div`
-  width: ${({ $isMobile }) => ($isMobile ? '100%' : '210px')};
-  height: ${({ $isMobile }) => ($isMobile ? '100%' : '100vh')};
+  width: ${({ $isMobile }) => ($isMobile ? '280px' : '210px')};
+  height: 100vh;
   background-color: white;
   border-right: 1px solid #e0e0e0;
   position: ${({ $isMobile }) => ($isMobile ? 'fixed' : 'relative')};
-  z-index: ${({ $isMobile }) => ($isMobile ? '1000' : '1')};
+  left: 0;
+  top: 0;
+  z-index: 1000;
   overflow-y: auto;
-  transition: all 0.3s ease;
+  transform: translateX(
+    ${({ $isMobile, $isOpen }) => ($isMobile ? ($isOpen ? '0' : '-100%') : '0')}
+  );
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 `;
 
 const Logo = styled.div`
   padding: 20px;
   display: flex;
   align-items: center;
-  justify-content: ${({ $isMobile }) =>
-    $isMobile ? 'space-between' : 'flex-start'};
+  justify-content: flex-start;
   /* border-bottom: 1px solid #f0f0f0; */
 `;
 
@@ -76,13 +83,14 @@ const CloseButton = styled.button`
   display: ${({ $isMobile }) => ($isMobile ? 'flex' : 'none')};
   background: none;
   border: none;
+  color: #333;
   font-size: 20px;
+  margin-right: 15px;
   cursor: pointer;
-  color: #777;
 `;
 
 const Sidebar = (props) => {
-  const { isMobile, onClose } = props;
+  const { isMobile, onClose, isOpen = true } = props;
   const menuItems = [
     { path: '/', name: 'Dashboard', icon: <FaHome /> },
     { path: '/transactions', name: 'Transactions', icon: <FaExchangeAlt /> },
@@ -95,18 +103,18 @@ const Sidebar = (props) => {
     { path: '/settings', name: 'Setting', icon: <FaCogs /> },
   ];
 
-  return (
-    <SidebarContainer $isMobile={isMobile}>
+  const sidebarContent = (
+    <SidebarContainer $isMobile={isMobile} $isOpen={isOpen}>
       <Logo $isMobile={isMobile}>
+        <CloseButton $isMobile={isMobile} onClick={onClose}>
+          <FaTimes />
+        </CloseButton>
         <img
           src={logo}
           alt="Soar Task"
           className="w-full h-full object-cover"
           style={{ width: isMobile ? '10rem' : '' }}
         />
-        <CloseButton $isMobile={isMobile} onClick={onClose}>
-          &times;
-        </CloseButton>
       </Logo>
       <nav>
         {menuItems.map((item) => (
@@ -123,6 +131,12 @@ const Sidebar = (props) => {
       </nav>
     </SidebarContainer>
   );
+
+  if (isMobile) {
+    return createPortal(sidebarContent, document.body);
+  }
+
+  return sidebarContent;
 };
 
 export default Sidebar;
