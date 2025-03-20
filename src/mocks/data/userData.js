@@ -9,7 +9,7 @@ export const userData = {
   city: 'San Jose',
   postalCode: '45962',
   country: 'USA',
-  profilePicture: '/src/assets/user.png',
+  profilePicture: '/assets/user.png',
   preferences: {
     darkMode: false,
     notifications: true,
