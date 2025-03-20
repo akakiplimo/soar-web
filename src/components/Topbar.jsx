@@ -32,7 +32,7 @@ const PageTitle = styled.h1`
   padding-left: ${({ $isMobile }) => ($isMobile ? '0' : '10px')};
 `;
 
-const SearchBar = styled.div`
+const SearchBar = styled.form`
   position: relative;
   width: ${({ $isMobile }) => ($isMobile ? '100%' : '300px')};
   margin: ${({ $isMobile }) => ($isMobile ? '15px 0 0' : '0 20px')};
@@ -64,7 +64,7 @@ const SearchInput = styled.input`
   }
 `;
 
-const SearchIcon = styled.div`
+const SearchIcon = styled.label`
   position: absolute;
   left: 15px;
   top: 50%;
@@ -85,7 +85,7 @@ const LeftSection = styled.div`
   `}
 `;
 
-const RightSection = styled.div`
+const RightSection = styled.nav`
   display: flex;
   align-items: center;
 `;
@@ -102,7 +102,6 @@ const IconButton = styled.div`
   margin-left: 10px;
   color: #8a94a6;
   background-color: #f5f7fa;
-
   cursor: pointer;
   transition: all 0.2s;
 
@@ -115,15 +114,25 @@ const IconButton = styled.div`
   @media (min-width: 820px) {
     display: flex;
   }
+
+  img,
+  svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
 `;
 
-const UserAvatar = styled.div`
+const UserAvatar = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
   margin-left: 15px;
   cursor: pointer;
+  padding: 0;
+  border: none;
+  background: none;
 `;
 
 const MenuButton = styled.button`
@@ -143,6 +152,19 @@ const MenuButton = styled.button`
   `}
 `;
 
+// Screen reader only content
+const ScreenReaderOnly = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+`;
+
 const TopBar = ({ isMobile, onMenuClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -157,13 +179,22 @@ const TopBar = ({ isMobile, onMenuClick }) => {
     navigate('/settings');
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    // Handle search submission logic here
+  };
+
   return (
     <TopBarContainer $isMobile={isMobile}>
       <MainSection>
         <LeftSection $isMobile={isMobile}>
           {isMobile && (
-            <MenuButton $isMobile={isMobile} onClick={onMenuClick}>
-              <FaBars />
+            <MenuButton
+              $isMobile={isMobile}
+              onClick={onMenuClick}
+              aria-label="Open navigation menu"
+            >
+              <FaBars aria-hidden="true" />
             </MenuButton>
           )}
           <PageTitle $isMobile={isMobile}>
@@ -171,27 +202,41 @@ const TopBar = ({ isMobile, onMenuClick }) => {
           </PageTitle>
         </LeftSection>
 
-        <RightSection>
+        <RightSection aria-label="User tools">
           {/* SearchBar will be shown here on desktop, but not on mobile */}
           {!isMobile && (
-            <SearchBar $isMobile={isMobile}>
-              <SearchIcon>
-                <img src={searchIcon} alt={<FaSearch />} />
+            <SearchBar
+              $isMobile={isMobile}
+              role="search"
+              onSubmit={handleSearchSubmit}
+            >
+              <SearchIcon htmlFor="desktop-search">
+                <img src={searchIcon} alt="" aria-hidden="true" />
               </SearchIcon>
-              <SearchInput placeholder="Search for something" />
+              <SearchInput
+                id="desktop-search"
+                type="search"
+                placeholder="Search for something"
+                aria-label="Search"
+              />
             </SearchBar>
           )}
-          <IconButton $isMobile={isMobile} onClick={handleSettingsClick}>
-            <img src={settingsIcon} alt={<FaCog />} />
+          <IconButton
+            $isMobile={isMobile}
+            onClick={handleSettingsClick}
+            aria-label="Settings"
+          >
+            <img src={settingsIcon} alt="" aria-hidden="true" />
           </IconButton>
-          <IconButton $isMobile={isMobile}>
-            <img src={notificationsIcon} alt={<FaBell />} />
+          <IconButton $isMobile={isMobile} aria-label="Notifications">
+            <img src={notificationsIcon} alt="" aria-hidden="true" />
           </IconButton>
-          <UserAvatar>
+          <UserAvatar aria-label="User profile">
             <img
               src={userImg}
-              alt="User"
+              alt=""
               className="w-full h-full object-cover"
+              aria-hidden="true"
             />
           </UserAvatar>
         </RightSection>
@@ -199,11 +244,20 @@ const TopBar = ({ isMobile, onMenuClick }) => {
 
       {/* SearchBar only shown here on mobile */}
       {isMobile && (
-        <SearchBar $isMobile={isMobile}>
-          <SearchIcon>
-            <img src={searchIcon} alt={<FaSearch />} />
+        <SearchBar
+          $isMobile={isMobile}
+          role="search"
+          onSubmit={handleSearchSubmit}
+        >
+          <SearchIcon htmlFor="mobile-search">
+            <img src={searchIcon} alt="" aria-hidden="true" />
           </SearchIcon>
-          <SearchInput placeholder="Search for something" />
+          <SearchInput
+            id="mobile-search"
+            type="search"
+            placeholder="Search for something"
+            aria-label="Search"
+          />
         </SearchBar>
       )}
     </TopBarContainer>

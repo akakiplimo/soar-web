@@ -3,6 +3,11 @@ import { styled } from 'styled-components';
 import ProfileEditForm from '../components/forms/ProfileEditForm';
 import PreferencesForm from '../components/forms/PreferencesForm';
 import SecurityForm from '../components/forms/SecurityForm';
+import { useDispatch } from 'react-redux';
+import { useLoadingStates } from '../utils/loadingStates';
+import ProfileEditFormSkeleton from '../components/skeletons/FormSkeleton';
+import { useEffect } from 'react';
+import { fetchUserProfile, resetUserState } from '../store/slices/userSlice';
 
 const TabsContainer = styled.div`
   display: flex;
@@ -37,6 +42,17 @@ const TabButton = styled.div`
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('profile');
 
+  const dispatch = useDispatch();
+  const { userLoading } = useLoadingStates();
+
+  useEffect(() => {
+    // First, reset state to trigger and simulate loading state
+    dispatch(resetUserState());
+
+    // Then fetch fresh data
+    dispatch(fetchUserProfile());
+  }, [dispatch]);
+
   return (
     <div className="w-full bg-gray-50 min-h-screen">
       <div className="bg-white rounded-lg shadow-sm">
@@ -64,7 +80,13 @@ const SettingsPage = () => {
         </div>
 
         <div className="p-6">
-          {activeTab === 'profile' && <ProfileEditForm />}
+          {activeTab === 'profile' ? (
+            userLoading ? (
+              <ProfileEditFormSkeleton />
+            ) : (
+              <ProfileEditForm />
+            )
+          ) : null}
           {activeTab === 'preferences' && <PreferencesForm />}
           {activeTab === 'security' && <SecurityForm />}
         </div>
