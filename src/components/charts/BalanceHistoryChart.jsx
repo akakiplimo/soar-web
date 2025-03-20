@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Area,
+  ComposedChart,
 } from 'recharts';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -79,14 +80,14 @@ const BalanceHistoryChart = () => {
   return (
     <ChartContainer>
       <ResponsiveContainer width="100%" height="90%">
-        <LineChart
+        <ComposedChart
           data={chartData}
           margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
         >
           <defs>
             <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#4169E1" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#4169E1" stopOpacity={0} />
+              <stop offset="5%" stopColor="#2D60FF" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#2D60FF" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
@@ -106,12 +107,12 @@ const BalanceHistoryChart = () => {
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#4169E1"
+            stroke="#1814F3"
             strokeWidth={2}
             dot={{ r: 0 }}
             activeDot={{
               r: 6,
-              fill: '#4169E1',
+              fill: '#1814F3',
               stroke: '#fff',
               strokeWidth: 2,
             }}
@@ -119,11 +120,11 @@ const BalanceHistoryChart = () => {
           <Area
             type="monotone"
             dataKey="value"
-            stroke="none"
+            stroke="#2D60FF"
             fillOpacity={1}
             fill="url(#colorBalance)"
           />
-        </LineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </ChartContainer>
   );

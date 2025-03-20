@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { FaSearch, FaBell, FaCog, FaBars } from 'react-icons/fa';
 import userImg from '../assets/user.png';
-import { useLocation } from 'react-router-dom';
+import searchIcon from '../assets/icon_search.svg';
+import settingsIcon from '../assets/icon_settings.svg';
+import notificationsIcon from '../assets/icon_notification.svg';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { COLORS } from '../utils/colors';
 
 const TopBarContainer = styled.header`
@@ -98,11 +101,13 @@ const IconButton = styled.div`
   justify-content: center;
   margin-left: 10px;
   color: #8a94a6;
+  background-color: #f5f7fa;
+
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background-color: #f5f7fa;
+    background-color: #e8eaed;
   }
 
   display: ${({ $isMobile }) => ($isMobile ? 'none' : 'flex')};
@@ -140,11 +145,17 @@ const MenuButton = styled.button`
 
 const TopBar = ({ isMobile, onMenuClick }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
 
   // remove preceding '/' and capitalize the first letter
   const pageTitle =
     pathname.replace('/', '').charAt(0).toUpperCase() + pathname.slice(2);
+
+  // route to settings
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
 
   return (
     <TopBarContainer $isMobile={isMobile}>
@@ -165,16 +176,16 @@ const TopBar = ({ isMobile, onMenuClick }) => {
           {!isMobile && (
             <SearchBar $isMobile={isMobile}>
               <SearchIcon>
-                <FaSearch />
+                <img src={searchIcon} alt={<FaSearch />} />
               </SearchIcon>
               <SearchInput placeholder="Search for something" />
             </SearchBar>
           )}
-          <IconButton $isMobile={isMobile}>
-            <FaCog />
+          <IconButton $isMobile={isMobile} onClick={handleSettingsClick}>
+            <img src={settingsIcon} alt={<FaCog />} />
           </IconButton>
           <IconButton $isMobile={isMobile}>
-            <FaBell />
+            <img src={notificationsIcon} alt={<FaBell />} />
           </IconButton>
           <UserAvatar>
             <img
@@ -190,7 +201,7 @@ const TopBar = ({ isMobile, onMenuClick }) => {
       {isMobile && (
         <SearchBar $isMobile={isMobile}>
           <SearchIcon>
-            <FaSearch />
+            <img src={searchIcon} alt={<FaSearch />} />
           </SearchIcon>
           <SearchInput placeholder="Search for something" />
         </SearchBar>

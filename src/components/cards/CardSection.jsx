@@ -53,7 +53,7 @@ const CardSection = ({ isMobile }) => {
 
   return (
     <CardsSectionContainer $isMobile={isMobile}>
-      {cardsData.map((card) => (
+      {cardsData.slice(0, 2).map((card) => (
         <CreditCard
           key={card.id}
           type={card.type}

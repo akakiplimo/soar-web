@@ -1,7 +1,8 @@
 import React from 'react';
+import { Placeholder } from '../../App';
 
 const SecurityForm = () => {
-  return <div>SecurityForm</div>;
+  return <Placeholder />;
 };
 
 export default SecurityForm;
