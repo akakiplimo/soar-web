@@ -111,14 +111,14 @@ const WeeklyActivityChart = () => {
           <Bar
             dataKey="withdraw"
             name="Withdraw"
-            fill="#333"
+            fill="#232323"
             radius={[5, 5, 0, 0]}
             barSize={20}
           />
           <Bar
             dataKey="deposit"
             name="Deposit"
-            fill="#4169E1"
+            fill="#396AFF"
             radius={[5, 5, 0, 0]}
             barSize={20}
           />

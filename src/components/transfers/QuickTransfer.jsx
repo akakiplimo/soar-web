@@ -6,6 +6,8 @@ import user3 from '../../assets/user3.png';
 import user4 from '../../assets/user4.png';
 import user5 from '../../assets/user5.png';
 import user1 from '../../assets/user.png';
+import { COLORS } from '../../utils/colors';
+import { z } from 'zod';
 
 const TransferContainer = styled.div`
   width: 100%;
@@ -67,7 +69,7 @@ const ContactName = styled.div`
 
 const ContactTitle = styled.div`
   font-size: 12px;
-  color: #888;
+  color: ${COLORS.textPrimary};
   text-align: center;
 `;
 
@@ -75,15 +77,22 @@ const TransferForm = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  position: relative;
+`;
+
+const AmountLabel = styled.label`
+  color: ${COLORS.textPrimary};
+  padding: 12px 16px;
 `;
 
 const AmountInput = styled.input`
   flex: 1;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 50px;
   border: 1px solid #e0e0e0;
   background-color: #f5f7fa;
   font-size: 14px;
+  color: ${COLORS.textPrimary};
 
   &:focus {
     outline: none;
@@ -96,24 +105,36 @@ const SendButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #333;
+  background-color: #232323;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 0 20px;
+  border-radius: 50px;
+  padding: 13px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  position: absolute;
+  right: 0;
 
   &:hover {
-    background-color: #222;
+    background-color: #396aff;
   }
+`;
+
+const ErrorMessage = styled.div`
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: 4px;
+  position: absolute;
+  bottom: -20px;
+  left: 16px;
 `;
 
 const QuickTransfer = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [amount, setAmount] = useState('525.50');
+  const [error, setError] = useState(null);
 
   // Sample contacts data based on the image
   const contacts = [
@@ -149,18 +170,59 @@ const QuickTransfer = () => {
     },
   ];
 
+  // Define Zod schema for amount validation
+  const amountSchema = z
+    .string()
+    .refine((val) => !isNaN(parseFloat(val)) && isFinite(parseFloat(val)), {
+      message: 'Amount must be a valid number',
+    })
+    .refine((val) => parseFloat(val) > 0, {
+      message: 'Amount must be greater than 0',
+    })
+    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Amount must have at most 2 decimal places',
+    });
+
   const handleContactSelect = (contactId) => {
     setSelectedContact(contactId);
+
+    // clear error if contact has been selected
+    setError(null);
   };
 
   const handleAmountChange = (e) => {
-    setAmount(e.target.value);
+    const value = e.target.value;
+    setAmount(value);
+
+    // Clear error when user types
+    if (error) setError(null);
+  };
+
+  const validateAmount = () => {
+    try {
+      amountSchema.parse(amount);
+      return true;
+    } catch (err) {
+      setError(err.errors[0].message);
+      return false;
+    }
   };
 
   const handleSend = () => {
+    if (!selectedContact) {
+      setError('Please select a contact');
+      return;
+    }
+
+    if (!validateAmount()) {
+      return;
+    }
+
     console.log('Sending', amount, 'to contact ID:', selectedContact);
     // Here you would typically make an API call to process the transfer
-    window.alert(`Sending ${amount} to contact ID: ${selectedContact}`);
+    window.alert(
+      `Sending ${amount} to contact: ${contacts[selectedContact - 1].name}`
+    );
   };
 
   return (
@@ -175,6 +237,7 @@ const QuickTransfer = () => {
               <img
                 src={contact.avatar}
                 alt={contact.name}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             </Avatar>
@@ -185,15 +248,19 @@ const QuickTransfer = () => {
       </ContactsContainer>
 
       <TransferForm>
+        <AmountLabel htmlFor="amount">Write Amount</AmountLabel>
         <AmountInput
+          name="amount"
           type="text"
           placeholder="Write Amount"
           value={amount}
           onChange={handleAmountChange}
+          style={{ borderColor: error ? '#e53e3e' : '' }}
         />
         <SendButton onClick={handleSend}>
           Send <FaPaperPlane className="ml-2" />
         </SendButton>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </TransferForm>
     </TransferContainer>
   );

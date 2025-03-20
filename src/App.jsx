@@ -3,6 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';
 import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
+import CreditCardsPage from './pages/CreditCardsPage';
+
+export const Placeholder = () => {
+  return <div className="text-gray-500">Under Construction 🚧</div>;
+};
 
 function App() {
   return (
@@ -10,13 +15,13 @@ function App() {
       <Routes>
         <Route path="/" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="transactions" element={<div>Transactions Page</div>} />
-          <Route path="accounts" element={<div>Accounts Page</div>} />
-          <Route path="investments" element={<div>Investments Page</div>} />
-          <Route path="credit-cards" element={<div>Credit Cards Page</div>} />
-          <Route path="loans" element={<div>Loans Page</div>} />
-          <Route path="services" element={<div>Services Page</div>} />
-          <Route path="privileges" element={<div>My Privileges Page</div>} />
+          <Route path="transactions" element={<Placeholder />} />
+          <Route path="accounts" element={<Placeholder />} />
+          <Route path="investments" element={<Placeholder />} />
+          <Route path="credit-cards" element={<CreditCardsPage />} />
+          <Route path="loans" element={<Placeholder />} />
+          <Route path="services" element={<Placeholder />} />
+          <Route path="privileges" element={<Placeholder />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>

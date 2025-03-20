@@ -1,7 +1,8 @@
 import React from 'react';
+import { Placeholder } from '../../App';
 
 const PreferencesForm = () => {
-  return <div>PreferencesForm</div>;
+  return <Placeholder />;
 };
 
 export default PreferencesForm;

@@ -83,6 +83,17 @@ const SubmitButtonContainer = styled.div`
   margin-top: 2rem;
 `;
 
+const SubmitButton = styled.button`
+  color: white;
+  cursor: pointer;
+  background-color: #232323;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #396aff;
+  }
+`;
+
 // Define validation schema with Zod
 const profileSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -186,6 +197,7 @@ const ProfileEditForm = () => {
             <img
               src={profilePicture ?? userImg}
               alt="ProfileEditImg"
+              loading="lazy"
               className="w-full h-full object-cover rounded-full"
             />
             <EditIcon onClick={handleProfilePictureClick}>
@@ -359,12 +371,12 @@ const ProfileEditForm = () => {
               )}
             </div>
             <SubmitButtonContainer>
-              <button
+              <SubmitButton
                 type="submit"
-                className="w-full md:w-48 bg-gray-900 text-white py-3 px-6 rounded-md hover:bg-gray-800 transition-colors"
+                className="w-full md:w-48 py-3 px-6 rounded-md transition-colors"
               >
                 Save
-              </button>
+              </SubmitButton>
             </SubmitButtonContainer>
           </FormGrid>
         </FormSection>
