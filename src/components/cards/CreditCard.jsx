@@ -11,14 +11,20 @@ const CardContainer = styled.div`
   position: relative;
   overflow: hidden;
   color: ${(props) => (props.type === 'dark' ? 'white' : '#333')};
-  background: ${(props) => (props.type === 'dark' ? '#333' : 'white')};
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: ${(props) => {
+    if (props.type === 'dark') {
+      return 'linear-gradient(to right, rgba(78, 78, 91, 1), rgba(36, 36, 48, 1), rgba(26, 26, 36, 1));';
+    }
+    return 'white';
+  }};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-width: ${({ $isMobile }) => ($isMobile ? '70%' : 'auto')};
-  scroll-snap-align: start;
+  min-width: ${({ $isMobile }) => ($isMobile ? '300px' : 'auto')};
+  max-width: 400px;
+  scroll-snap-align: ${({ $isMobile }) => ($isMobile ? 'start' : 'none')};
 `;
 
 const CardHeader = styled.div`
@@ -52,7 +58,10 @@ const CardFooter = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   align-content: center;
-  background: ${({ type }) => (type === 'dark' ? '#666' : '')};
+  background: ${({ type }) =>
+    type === 'dark'
+      ? 'linear-gradient(to right,rgba(255, 255, 255, 0.3), rgba(102, 102, 102, 0.3));'
+      : ''};
   margin: 0 -20px -20px -20px;
   padding: 0 20px 10px;
   width: calc(100% + 40px);
@@ -84,7 +93,7 @@ const CardholderName = styled.div`
 const ValidInfo = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: right;
+  text-align: left;
 `;
 
 const CardNumber = styled.div`
@@ -147,7 +156,12 @@ const CreditCard = ({
         <ChipIcon>
           <img
             src={type === 'dark' ? chipIconLight : chipIconDark}
-            alt={<AltChipSvg type={type} />}
+            alt="Chip"
+            loading="lazy"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentNode.innerHTML = <AltChipSvg type={type} />;
+            }}
           />
         </ChipIcon>
       </CardHeader>

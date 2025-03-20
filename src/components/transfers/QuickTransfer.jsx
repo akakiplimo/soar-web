@@ -237,6 +237,7 @@ const QuickTransfer = () => {
               <img
                 src={contact.avatar}
                 alt={contact.name}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             </Avatar>

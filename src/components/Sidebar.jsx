@@ -112,6 +112,7 @@ const Sidebar = (props) => {
         <img
           src={logo}
           alt="Soar Task"
+          loading="lazy"
           className="w-full h-full object-cover"
           style={{ width: isMobile ? '10rem' : '' }}
         />

@@ -95,7 +95,11 @@ const RecentTransactions = ({ isMobile }) => {
         <TransactionItem key={index}>
           <div className="flex items-center">
             <TransactionIcon $bgColor={transaction.iconBg}>
-              <img src={transaction.icon} alt={transaction.type} />
+              <img
+                loading="lazy"
+                src={transaction.icon}
+                alt={transaction.type}
+              />
             </TransactionIcon>
             <TransactionInfo>
               <div className="font-medium">{transaction.text}</div>

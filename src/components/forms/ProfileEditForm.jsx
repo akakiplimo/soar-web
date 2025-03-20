@@ -197,6 +197,7 @@ const ProfileEditForm = () => {
             <img
               src={profilePicture ?? userImg}
               alt="ProfileEditImg"
+              loading="lazy"
               className="w-full h-full object-cover rounded-full"
             />
             <EditIcon onClick={handleProfilePictureClick}>

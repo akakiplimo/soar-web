@@ -8,6 +8,7 @@ import CardSection from '../components/cards/CardSection';
 import { useEffect } from 'react';
 import RecentTransactions from '../components/transactions/RecentTransactions';
 import { COLORS } from '../utils/colors';
+import { useNavigate } from 'react-router-dom';
 
 const PageContainer = styled.div`
   margin-top: 10px;
@@ -23,6 +24,7 @@ const SectionTitle = styled.h2`
 const DashboardPage = () => {
   const [hover, setHover] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,6 +34,10 @@ const DashboardPage = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleCreditCardsNavigate = () => {
+    navigate('/credit-cards');
+  };
 
   return (
     <PageContainer>
@@ -46,6 +52,7 @@ const DashboardPage = () => {
               }}
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
+              onClick={handleCreditCardsNavigate}
             >
               See All
             </a>

@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import CreditCard from './CreditCard';
-import { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchCards } from '../../store/slices/cardsSlice';
 
 const CardsSectionContainer = styled.div`
   display: flex;
+  flex-wrap: ${({ $isMobile }) => ($isMobile ? 'nowrap' : 'wrap')};
   overflow-x: ${({ $isMobile }) => ($isMobile ? 'auto' : 'visible')};
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: ${({ $isMobile }) => ($isMobile ? 'x mandatory' : 'none')};
   gap: ${({ $isMobile }) => ($isMobile ? '15px' : '20px')};
   padding-bottom: ${({ $isMobile }) => ($isMobile ? '10px' : '0')};
   margin-bottom: ${({ $isMobile }) => ($isMobile ? '10px' : '20px')};
@@ -23,15 +23,34 @@ const CardsSectionContainer = styled.div`
   }
 `;
 
-const CardSection = ({ isMobile }) => {
-  const [cardsData, setCardsData] = useState([]);
+const Container = styled.div`
+  display: flex;
+  gap: ${({ $isMobile }) => ($isMobile ? '15px' : '20px')};
+  ${({ $variant }) =>
+    $variant === 'wrapped'
+      ? `
+    flex-wrap: wrap;
+  `
+      : `
+    overflow-x: auto;
+    padding-bottom: 16px;
+  `}
+`;
+
+const CardSection = ({ isMobile, showAll = false, variant = 'scroll' }) => {
   const dispatch = useAppDispatch();
-  const cardsState = useAppSelector((state) => state.cards);
   const {
     data: cards,
     status,
     error,
-  } = cardsState ?? { data: null, status: 'idle', error: null };
+  } = useAppSelector(
+    (state) =>
+      state.cards || {
+        data: null,
+        status: 'idle',
+        error: null,
+      }
+  );
 
   useEffect(() => {
     if (status === 'idle') {
@@ -39,21 +58,15 @@ const CardSection = ({ isMobile }) => {
     }
   }, [dispatch, status]);
 
-  useEffect(() => {
-    if (cards) {
-      setCardsData(cards);
-    }
-  }, [cards]);
-
   if (status === 'loading') return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  if (!cardsData || cardsData.length === 0)
+  if (!cards || cards.length === 0)
     return <CardsSectionContainer>No Card Data found</CardsSectionContainer>;
 
   return (
-    <CardsSectionContainer $isMobile={isMobile}>
-      {cardsData.slice(0, 2).map((card) => (
+    <Container $isMobile={isMobile} $variant={variant}>
+      {cards.slice(0, showAll ? undefined : 2).map((card) => (
         <CreditCard
           key={card.id}
           type={card.type}
@@ -65,7 +78,7 @@ const CardSection = ({ isMobile }) => {
           isMobile={isMobile}
         />
       ))}
-    </CardsSectionContainer>
+    </Container>
   );
 };
 
