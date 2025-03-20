@@ -78,6 +78,10 @@ const TransferForm = styled.div`
   gap: 10px;
   margin-top: 20px;
   position: relative;
+
+  @media (max-width: 395px) {
+    height: 50px;
+  }
 `;
 
 const AmountLabel = styled.label`
@@ -116,6 +120,10 @@ const SendButton = styled.button`
   transition: background-color 0.2s;
   position: absolute;
   right: 0;
+
+  @media (max-width: 395px) {
+    padding: 15px;
+  }
 
   &:hover {
     background-color: #396aff;
