@@ -56,7 +56,7 @@ const SettingsPage = () => {
   return (
     <div className="w-full bg-gray-50 min-h-screen">
       <div className="bg-white rounded-lg shadow-sm">
-        <div className="border-b p-6">
+        <div className="p-6">
           <TabsContainer>
             <TabButton
               $active={activeTab === 'profile' ? 'true' : undefined}
